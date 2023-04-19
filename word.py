@@ -3,6 +3,7 @@ import re
 import os
 
 temp_file = 'temp.txt'
+local_word_list = []
 
 document_dict = {
     'paris': 'UNParis_A.txt',
@@ -10,35 +11,39 @@ document_dict = {
     'shell':'Shell_2015.txt'
 }
 
-def process_file(word, file_name):
-    """ 
-        Reading the file 
-            the UN file always have to be read and analyzed
-
-    """
-    print(word, file_name)
-    # I should also append the word to a list
-    # if the word has already been marked for UN
-    # do not do anything
-    # with open('UNParis_A.txt', 'r') as file:
-    #     count = 0
-    #     locations = []
-
-    #     for line_num, line in enumerate(file, start=1):
-    #         for match in re.finditer(word, line):
-    #             count += 1
-    #             location = (line_num, match.start())
-    #             locations.append(location)
-                
-    #     # print(f"The word '{word}' appears {count} times in the file")
-    #     print(f"The word '{word}' appears {count} times in the file at the following locations:")
-    #     # for location in locations:
-    #         # print(location)
-    #         # print(f"Line {location[0]}, position {location[1]}")
+def process_file(word, frequency, file_name):
+    value = document_dict[file_name.lower()]
+    list_docs = [document_dict['paris'], value]
+    
+    for docs in list_docs:
+        if docs == 'UNParis_A.txt' and word in local_word_list:
+            print('*** word has already been added',docs,word, frequency, file_name)
+            continue
         
+        else:
+            print('new word',docs,word, frequency, file_name)
+            local_word_list.append(word)
+            """ Reading the file - the UN file always have to be read and analyzed """
+            with open(docs, 'r') as file:
+                count = 0
+                locations = []
+
+                for line_num, line in enumerate(file, start=1):
+                    for match in re.finditer(word, line):
+                        count += 1
+                        location = (line_num, match.start())
+                        locations.append(location)
+                        
+                # print(f"The word '{word}' appears {count} times in the file")
+                print(f"The word '{word}' appears {count} times in the file at the following locations:")
+                # for location in locations:
+                    # print(location)
+                    # print(f"Line {location[0]}, position {location[1]}")
+    
+    
     # """ Modify the File """
     # with open('UNParis_A.txt', 'r') as file:
-    #     modified_word = '🛑' + word + '🛑'
+    #     modified_word = '🛑' + frequency + "-" + word + "-" + frequency + '🛑'
 
     #     with open(temp_file, 'w') as temp:
             
@@ -69,10 +74,11 @@ def main():
 
             for i in range(1,len(matrix)):
                 word = matrix[i][0]
+                frequency = matrix[i][1]
                 # print('i:',i,'word:',matrix[i][0])
                 if matrix[i][j] == '1':
                     # print('match',matrix[i][j])
-                    process_file(word, file_name)
+                    process_file(word, frequency, file_name)
     # with open('copy2_overlap.csv', 'r') as file:
     #     reader = csv.reader(file)
         
