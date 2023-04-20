@@ -2,7 +2,6 @@ import csv
 import re
 import os
 
-temp_file = 'temp.txt'
 local_word_list = []
 
 document_dict = {
@@ -14,16 +13,17 @@ document_dict = {
 def process_file(word, frequency, file_name):
     value = document_dict[file_name.lower()]
     list_docs = [document_dict['paris'], value]
+    # list_docs = [value]
     
     for docs in list_docs:
         if docs == 'UNParis_A.txt' and word in local_word_list:
-            print('*** word has already been added',docs,word, frequency, file_name)
+            # print('*** word has already been added',docs,word, frequency, file_name)
             continue
         
         else:
             print('new word',docs,word, frequency, file_name)
             local_word_list.append(word)
-            """ Reading the file - the UN file always have to be read and analyzed """
+            """ Reading from the file """
             with open(docs, 'r') as file:
                 count = 0
                 locations = []
@@ -39,23 +39,21 @@ def process_file(word, frequency, file_name):
                 # for location in locations:
                     # print(location)
                     # print(f"Line {location[0]}, position {location[1]}")
-    
-    
-    # """ Modify the File """
-    # with open('UNParis_A.txt', 'r') as file:
-    #     modified_word = '🛑' + frequency + "-" + word + "-" + frequency + '🛑'
-
-    #     with open(temp_file, 'w') as temp:
             
-    #         for line_num, line in enumerate(file, start=1):
-    #             for location in locations:
-    #                 if location[0] == line_num:
-    #                     start_pos = location[1]
-    #                     end_pos = start_pos + len(word)
-    #                     line = line[:start_pos] + modified_word + line[end_pos:]
-    #             temp.write(line)
-
-    # os.replace(temp_file, 'UNParis_A.txt')
+            """ Writing to the file """
+            temp_file = 'temp.txt'
+            with open(docs, 'r') as file: # I have to open the file again, otherwise there would be an error.
+                modified_word = '🛑' + frequency + "-" + word + "-" + frequency + '🛑'
+                with open(temp_file, 'w') as temp:
+                    # # If I don't open the file again, there would not be any reading
+                    for line_num, line in enumerate(file, start=1):
+                        for location in locations:
+                            if location[0] == line_num:
+                                start_pos = location[1]
+                                end_pos = start_pos + len(word)
+                                line = line[:start_pos] + modified_word + line[end_pos:]
+                        temp.write(line)
+            os.replace(temp_file, docs)
 
 def main():
     counter = 0
@@ -79,64 +77,7 @@ def main():
                 if matrix[i][j] == '1':
                     # print('match',matrix[i][j])
                     process_file(word, frequency, file_name)
-    # with open('copy2_overlap.csv', 'r') as file:
-    #     reader = csv.reader(file)
-        
-    #     header = next(reader)
+            print()
 
-    #     n = 3
-
-    #     new_list = header[n:]
-
-    #     # print(new_list)
-
-    #     for cols in new_list:
-    #         print(cols)
-    #         for row in reader:
-    #             print(row)
-        
-    #     # for row in reader:
-    #     #     for col in row:
-    #     #         print(col)
-    
-    # with open('copy2_overlap.csv', 'r') as csvfile:
-    #     csvreader = csv.reader(csvfile)
-        
-    #     # Get the header row and store it in a variable
-        
-    #     header = next(csvreader)
-
-    #     n = 3
-
-    #     new_list = header[n:]
-
-    #     for columns in new_list:
-    #         counter += 1
-    #         print(columns)
-    #         # Iterate over the remaining rows in the CSV file
-    #         for row in csvreader:
-    #             # the first row would pertain the name
-    #         #     """ If comparison """
-    #         #     """ 
-    #         #         you should be able to get the name of the the column
-    #         #         trim the string to the last _, so that you know which
-    #         #         document you're going to be manipulating
-    #         #     """
-    #             # if (row[2+counter] == '1'): # UN_Overlap_Shell
-    #             print(2+counter)
-    #             # print(row[2+counter])
-    #         #     # if (row[3] == '1'): # UN_Overlap_Shell
-    #         #         # print('bingo for word', row[0])
-    #         #         # process_file(row[0])
-    #         #         print()
-        
-    #     # print(header)
-    #     # print()
-        
 if __name__ == "__main__":
     main()
-
-
-    
-    
-    """Do this for the Shell document"""
