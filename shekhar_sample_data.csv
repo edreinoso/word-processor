@@ -1,0 +1,10 @@
+Keywords,Frequency_UN,Frequency_Shell_2012,Type,Found_In_UN,Found_In_Shell2012
+Parties,401,2303,Noun,1,1
+Agreement,243,1129,Noun,1,1
+Article,12,0,Noun,1,0
+Conference,0,120,Noun,0,1
+paragraph,0,116,Noun,0,1
+Convention,12,84,Noun,0,1
+country,3,76,Noun,1,1
+meeting,6,76,Noun,1,1
+Sustainability,2,0,Noun,1,0
