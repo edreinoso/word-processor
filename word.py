@@ -11,6 +11,7 @@ document_dict = {
 }
 
 def process_file(word, frequency, file_name, emoji_type):
+    # print(word, frequency, file_name, emoji_type)
     value = document_dict[file_name.lower()]
     list_docs = [document_dict['paris'], value]
     # list_docs = [value]
@@ -24,7 +25,7 @@ def process_file(word, frequency, file_name, emoji_type):
             print('new word',docs,word, frequency, file_name)
             local_word_list.append(word)
             """ Reading from the file """
-            with open(docs, 'r') as file:
+            with open('./files/'+docs, 'r') as file:
                 count = 0
                 locations = []
 
@@ -42,7 +43,7 @@ def process_file(word, frequency, file_name, emoji_type):
             
             """ Writing to the file """
             temp_file = 'temp.txt'
-            with open(docs, 'r') as file: # I have to open the file again, otherwise there would be an error.
+            with open('./files/'+docs, 'r') as file: # I have to open the file again, otherwise there would be an error.
                 modified_word = emoji_type + frequency + "-" + word + "-" + frequency + emoji_type
                 with open(temp_file, 'w') as temp:
                     # # If I don't open the file again, there would not be any reading
@@ -53,7 +54,7 @@ def process_file(word, frequency, file_name, emoji_type):
                                 end_pos = start_pos + len(word)
                                 line = line[:start_pos] + modified_word + line[end_pos:]
                         temp.write(line)
-            os.replace(temp_file, docs)
+            os.replace(temp_file, './files/'+docs)
 
 def row_evaluation(matrix):
     foo = []
@@ -78,9 +79,10 @@ def row_evaluation(matrix):
     return foo
 
 def main():
-    counter = 0
-    emojis_0= '⚠️'
-    emojis_1= '🛑'
+    tp1_emojis_0 = '⚠️'
+    tp1_emojis_1 = '🛑'
+    tp2_emojis_0 = '💩'
+    tp2_emojis_1 = '💶'
 
     with open('copy2_overlap.csv', 'r') as file:
         reader = csv.reader(file)
@@ -97,15 +99,27 @@ def main():
         # Iterate through columns first, then rows
         for j in range(3,len(matrix[0])):
             file_name = matrix[0][j].split("_")[-1]
+            print('----col', matrix[0][j]) # sanity check
+            count = 0 # inner count for foo
             for i in range(1,len(matrix)):
                 word = matrix[i][0]
                 frequency = matrix[i][1]
-                # print('i:',i,'word:',matrix[i][0])
-                if matrix[i][j] == '1': # if I'm one, and the rest is also one, then do
-                    # print('match',matrix[i][j])
-                    process_file(word, frequency, file_name, emojis_1)
-                else: # if I'm one, but others are not 1
-                    process_file(word, frequency, file_name, emojis_0)
+                tp_word = matrix[i][2]
+
+                if tp_word == 'Noun': # separating then by noun or 2-grams
+                    # print('i:',i,'word:',matrix[i][0])
+                    if matrix[i][j] == '1' and foo[count]: # if I'm one, and the rest is also one, then do
+                        # print('match',matrix[i][j])
+                        process_file(word, frequency, file_name, tp1_emojis_1)
+                    else: # if I'm one, but others are not 1
+                        process_file(word, frequency, file_name, tp1_emojis_0)
+                else:
+                    if matrix[i][j] == '1' and foo[count]: # if I'm one, and the rest is also one, then do
+                        process_file(word, frequency, file_name, tp2_emojis_1)
+                    else: # if I'm one, but others are not 1
+                        process_file(word, frequency, file_name, tp2_emojis_0)
+
+                count += 1
             print()
 
 if __name__ == "__main__":
