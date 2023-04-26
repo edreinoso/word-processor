@@ -14,13 +14,21 @@ def roman_to_decimal(roman_num):
     return decimal_num
 
 # read text file line by line
-with open('./files/UNParis_A.txt', 'r') as f:
+with open('./files/UNParis_A_romans.txt', 'r') as f:
     current_section = None
     finished_section = False
     absolute_count = 0
     relative_count = 0
+    total_num_words = 0
 
-    for line in f:
+    while True:
+        line = f.readline()
+        
+        if not line:
+            print('🚧 Total num of words', total_num_words, 'absolute count (nouns)', absolute_count, 'relative count', relative_count)
+            break
+        # print(line)
+
         # check if line contains a Roman numeral
         roman_num_match = re.search('[IVXLCDM]+', line)
         # print(roman_num_match)
@@ -30,15 +38,23 @@ with open('./files/UNParis_A.txt', 'r') as f:
             decimal_num = roman_to_decimal(roman_num)
             current_section = decimal_num
             # I want to be able to output the computation that happened below
-            print('🚧 New section')
-            
+            if total_num_words != 0:
+                relative_count = absolute_count / total_num_words
+                print('🚧 Total num of words', total_num_words, 'absolute count (nouns)', absolute_count, 'relative count', relative_count)
+            # print('🚧 New section')
             
             # and then reset the counters, cause this is just bunch of counters
             absolute_count = 0
             relative_count = 0
+            total_num_words = 0
         else:
             # compute something based on current section and current line
             if current_section is not None:
                 # do computation here based on current_section and current line
                 # mainly I would like to have the relative word count and the absolute word count
-                print(f"Section {current_section}: {line}")
+                line_words = len(line.split())
+                total_num_words += line_words
+                for word in list_of_words:
+                    if word in line:
+                        absolute_count += 1
+                # print(f"Section {current_section}: {line} Word count {line_words}")
