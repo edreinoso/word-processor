@@ -1,5 +1,7 @@
 from collections import Counter
+import csv
 import nltk
+import os
 # nltk.download('punkt')
 # nltk.download('stopwords')
 # nltk.download('averaged_perceptron_tagger')
@@ -7,46 +9,59 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 stop_words = set(stopwords.words('english'))
 
-with open('sample.txt', 'r') as infile:
-	txt = infile.read()
+directory = '/Users/elchoco/clients/oldrich/files'
 
-	txt_lower = txt.lower() # lower case the document
+for filename in os.listdir(directory):
+	if filename.endswith('.txt'):
+		print(filename)
 
-	tokenized = sent_tokenize(txt_lower)
-	nouns = []
-	remove_words = ['fccc/cp/2015/10/add.1','fccc/cp/2015/7','fccc/sb/2015/inf.3','a','b','c','d','e','f','g','h','i','ii','iii','iv','v','vi','vii','a/res/70/1','’','“','”','>','<']
-	
-	for i in tokenized:
-		
-		# Word tokenizers is used to find the words
-		# and punctuation in a string
-		wordsList = nltk.word_tokenize(i)
+		with open(filename, 'r') as infile:
+			txt = infile.read()
 
-		# removing stop words from wordList
-		wordsList = [ w for w in wordsList if not w in stop_words ]
+			txt_lower = txt.lower() # lower case the document
 
-		# Using a Tagger. Which is part-of-speech
-		# tagger or POS-tagger.
-		tagged = nltk.pos_tag(wordsList)
+			tokenized = sent_tokenize(txt_lower)
+			nouns = []
+			remove_words_in_un_docs = ['fccc/cp/2015/10/add.1','fccc/cp/2015/7','fccc/sb/2015/inf.3','a','b','c','d','e','f','g','h','i','ii','iii','iv','v','vi','vii','a/res/70/1','’','“','”','>','<']
+			
+			for i in tokenized:
+				
+				# Word tokenizers is used to find the words
+				# and punctuation in a string
+				wordsList = nltk.word_tokenize(i)
 
-		# 1st step: tokenize
-		for word, pos in tagged:
-			if pos.startswith('N'):
-				nouns.append(word)
+				# removing stop words from wordList
+				wordsList = [ w for w in wordsList if not w in stop_words ]
 
-		# outfile.write(' '.join(nouns))
+				# Using a Tagger. Which is part-of-speech
+				# tagger or POS-tagger.
+				tagged = nltk.pos_tag(wordsList)
 
-	# 2nd step: sort
-	# nouns.sort()
+				# 1st step: tokenize
+				for word, pos in tagged:
+					if pos.startswith('N'):
+						nouns.append(word)
 
-	# 3rd step: get frequency
-	word_freq = Counter(nouns)
-	
-	# 4th step: cleanup process
-	for word in remove_words:
-		del word_freq[word]
+				# outfile.write(' '.join(nouns))
 
-	print(word_freq)
-	print(len(nouns)) # 5515 nouns
-	print(len(word_freq)) # 876 nouns
-		# print(len(nouns))
+			# 2nd step: get frequency
+			word_freq = Counter(nouns)
+			
+			# 3rd step (optional): cleanup process
+			"""
+			This step should only be done for the UN documents
+			"""
+			if "UN" in filename:
+				for word in remove_words_in_un_docs:
+					del word_freq[word]
+
+			# print(word_freq)
+			print(len(nouns)) # 5515 nouns
+			print(len(word_freq)) # 876 nouns
+
+		with open(filename+"out.csv", 'w', newline='') as csvfile:
+			writer = csv.writer(csvfile)
+			writer.writerow(['Word', 'Frequency'])
+			for word, freq in word_freq.most_common():
+				# print(word, freq)
+				writer.writerow([word,freq])
