@@ -2,6 +2,8 @@ from matplotlib import pyplot
 import pandas as pd
 import numpy as np
 from scipy.stats import chi2_contingency
+from numpy import dot
+from numpy.linalg import norm
 
 
 def welcome_message():
@@ -12,6 +14,7 @@ def prepare_data_from_csv(file):
     # We only focus on first three columns - keyword, frequency in UN, frequency in Company_Year (others not relevant)
     # sorting of data in csv is not important, otherwise the graph would look falling horizontally as it progresses
     df = pd.read_csv(file, sep=',')
+    df = df[(df['Found_In_UN'] == 1) & (df['Found_In_Shell2012'] == 1)]
     un = df['Frequency_UN']
     shell_2012 = df['Frequency_Shell_2012']
     bins = df.index.values
@@ -32,7 +35,13 @@ def prepare_data_from_csv(file):
     pyplot.ylabel("Keyword-frequency")
     pyplot.show()
     fig.savefig('Shell-2012_UN_influence_analysis.png', bbox_inches='tight')
-    chi_squared_influence_analysis(shell_2012, un)
+    # chi_squared_influence_analysis(shell_2012, un)
+    cosine_similarity(shell_2012, un)
+
+
+def cosine_similarity(list_a, list_b):
+    cos_sim = dot(list_a, list_b) / (norm(list_a) * norm(list_b))
+    print(f"Cos-similarity = {cos_sim}")
 
 
 def chi_squared_influence_analysis(company_year_word_frequency, un_word_frequency):
