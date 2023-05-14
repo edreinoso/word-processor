@@ -9,20 +9,20 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 stop_words = set(stopwords.words('english'))
 
-directory = '/Users/elchoco/clients/oldrich/files'
+directory = '/Users/elchoco/clients/oldrich/files/input/small_set'
 
 for filename in os.listdir(directory):
 	if filename.endswith('.txt'):
 		print(filename)
 
-		with open(filename, 'r') as infile:
+		with open(directory+'/'+filename, 'r') as infile:
 			txt = infile.read()
 
 			txt_lower = txt.lower() # lower case the document
 
 			tokenized = sent_tokenize(txt_lower)
 			nouns = []
-			remove_words_in_un_docs = ['fccc/cp/2015/10/add.1','fccc/cp/2015/7','fccc/sb/2015/inf.3','a','b','c','d','e','f','g','h','i','ii','iii','iv','v','vi','vii','a/res/70/1','’','“','”','>','<']
+			remove_words_in_un_docs = ['fccc/cp/2015/10/add.1','fccc/cp/2015/7','fccc/sb/2015/inf.3','vii','a/res/70/1']
 			
 			for i in tokenized:
 				
@@ -39,7 +39,10 @@ for filename in os.listdir(directory):
 
 				# 1st step: tokenize
 				for word, pos in tagged:
-					if pos.startswith('N'):
+					# print(word, len(word))
+					# if pos.startswith('N'):
+					if pos.startswith('N') and len(word) > 2:
+						# print(word, len(word))
 						nouns.append(word)
 
 				# outfile.write(' '.join(nouns))
@@ -59,7 +62,7 @@ for filename in os.listdir(directory):
 			print(len(nouns)) # 5515 nouns
 			print(len(word_freq)) # 876 nouns
 
-		with open(filename+"out.csv", 'w', newline='') as csvfile:
+		with open(directory+'/'+filename+"out.csv", 'w', newline='') as csvfile:
 			writer = csv.writer(csvfile)
 			writer.writerow(['Word', 'Frequency'])
 			for word, freq in word_freq.most_common():
