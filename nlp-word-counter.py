@@ -1,4 +1,5 @@
 from collections import Counter
+from datetime import datetime
 import csv
 import nltk
 import os
@@ -9,13 +10,16 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 stop_words = set(stopwords.words('english'))
 
-directory = '/Users/elchoco/clients/oldrich/files/input/small_set'
+in_directory = '/Users/elchoco/clients/oldrich/files/input/small_set'
+out_directory = '/Users/elchoco/clients/oldrich/files/csv/output/'
 
-for filename in os.listdir(directory):
+tag = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+
+for filename in os.listdir(in_directory):
 	if filename.endswith('.txt'):
 		print(filename)
 
-		with open(directory+'/'+filename, 'r') as infile:
+		with open(in_directory+'/'+filename, 'r') as infile:
 			txt = infile.read()
 
 			txt_lower = txt.lower() # lower case the document
@@ -62,7 +66,7 @@ for filename in os.listdir(directory):
 			print(len(nouns)) # 5515 nouns
 			print(len(word_freq)) # 876 nouns
 
-		with open(directory+'/'+filename+"out.csv", 'w', newline='') as csvfile:
+		with open(out_directory+tag+"_"+filename+".csv", 'w', newline='') as csvfile:
 			writer = csv.writer(csvfile)
 			writer.writerow(['Word', 'Frequency'])
 			for word, freq in word_freq.most_common():
