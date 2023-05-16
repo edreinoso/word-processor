@@ -35,7 +35,9 @@ def prepare_data_from_csv(file):
     pyplot.ylabel("Keyword-frequency")
     pyplot.show()
     fig.savefig('Shell-2012_UN_influence_analysis.png', bbox_inches='tight')
-    # chi_squared_influence_analysis(shell_2012, un)
+    chi_squared_influence_analysis(shell_2012, un)
+    # chi_squared_cramer_v_influence_analysis(shell_2012, un)
+    print("Cosine test results below:-------------")
     cosine_similarity(shell_2012, un)
 
 
@@ -44,13 +46,28 @@ def cosine_similarity(list_a, list_b):
     print(f"Cos-similarity = {cos_sim}")
 
 
+def chi_squared_cramer_v_influence_analysis(company_year_word_frequency, un_word_frequency):
+    # src - https://www.askpython.com/python/examples/chi-square-test
+    print(type(company_year_word_frequency.to_numpy()))
+    print(type(un_word_frequency.to_numpy()))
+    info = np.array([company_year_word_frequency.to_numpy(), un_word_frequency.to_numpy()])
+    print(info)
+    X2 = chi2_contingency(info, correction=False)[0]
+    N = np.sum(info)
+    minimum_dimension = min(info.shape) - 1
+
+    # Calculate Cramer's V
+    result = np.sqrt((X2 / N) / minimum_dimension)
+    print(result)
+
+
 def chi_squared_influence_analysis(company_year_word_frequency, un_word_frequency):
     # src - https://www.askpython.com/python/examples/chi-square-test
     print(type(company_year_word_frequency.to_numpy()))
     print(type(un_word_frequency.to_numpy()))
-    info = [company_year_word_frequency.to_numpy(), un_word_frequency.to_numpy()]
+    info = np.array([company_year_word_frequency.to_numpy(), un_word_frequency.to_numpy()])
     print(info)
-    stat, p, dof = chi2_contingency(info)
+    stat, p, dof, expected = chi2_contingency(info)
     print(dof)
     # The null hypothesis: The grouping variables have no association or correlation amongst them.
     # The alternate Hypothesis: The variables are associated with each other and happen to have a correlation between the variables.
