@@ -1,3 +1,4 @@
+import re
 import nltk
 from collections import Counter
 from nltk import ngrams
@@ -40,13 +41,24 @@ twograms = ngrams(sentence.split(), n)
 
 twoeuros = list(twograms)
 
-char_list = ['(', ')', '.', '"']
+# removing special characters
+# would probably have to test whether this may be accurate 
+pattern = r'[^\w\s]'
+
+cleaned_list_nested = []
+for tpl in twoeuros:
+    cleaned_tpl = []
+    for element in tpl:
+        cleaned_element = re.sub(pattern, '', element)
+        cleaned_tpl.append(cleaned_element)
+    cleaned_list_nested.append(tuple(cleaned_tpl))
+# print(cleaned_list_nested)
 
 # print(twoeuros)
 
-
 # frequency
-twofreq = Counter(twoeuros)
+twofreq = Counter(cleaned_list_nested)
+# twofreq = Counter(twoeuros)
 
 print(twofreq)
 
