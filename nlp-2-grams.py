@@ -17,16 +17,11 @@ tag = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
 n = 2
 
+
 def single_file():
     txt_lower = sentence.lower() # lower case the document
     pattern = r'[^a-zA-Z\s]|\d+'
     txt_lower = re.sub(pattern, '', txt_lower)
-
-    wordsList = [ w for w in txt_lower if not w in stop_words ]
-
-    # Using a Tagger. Which is part-of-speech
-    # tagger or POS-tagger.
-    tagged = nltk.pos_tag(wordsList)
 
     twograms = ngrams(txt_lower.split(), n)
     twoeuros = list(twograms)
@@ -46,42 +41,18 @@ def multiple_files():
             with open(in_directory+'/'+filename, 'r') as infile:
                 txt = infile.read()
                 txt_lower = txt.lower() # lower case the document
-                print(type(txt_lower))
+                len(txt_lower)
 
-                # tokenized = sent_tokenize(txt_lower)
+                pattern = r'[^a-zA-Z\s]|\d+'
+                txt_lower = re.sub(pattern, '', txt_lower)
 
-                # for i in tokenized:
-                # wordsList = nltk.word_tokenize(i)
-
-                wordsList = [ w for w in txt_lower if not w in stop_words ]
-                
-                # print(type(wordsList))
-                
-                # Using a Tagger. Which is part-of-speech
-                # tagger or POS-tagger.
-                tagged = nltk.pos_tag(wordsList)
-                
                 # twograms = ngrams(wordsList.split(), n)
                 twograms = ngrams(txt_lower.split(), n)
 
                 twoeuros = list(twograms)
                 
-                # removing special characters
-                # would probably have to test whether this may be accurate 
-                pattern = r'[^\w\s]'
-                cleaned_list_nested = []
-                for tpl in twoeuros:
-                    cleaned_tpl = []
-                    for element in tpl:
-                        cleaned_element = re.sub(pattern, '', element)
-                        cleaned_tpl.append(cleaned_element)
-                    cleaned_list_nested.append(tuple(cleaned_tpl))
-                # print(twoeuros)
-                
                 # frequency
-                # twofreq = Counter(cleaned_list_nested)
                 twofreq = Counter(twoeuros)
-                # print(twofreq)
                 
                 with open(out_directory+tag+"_"+filename+".csv", 'w', newline='') as csvfile:
                             writer = csv.writer(csvfile)
@@ -91,4 +62,5 @@ def multiple_files():
                                 writer.writerow([mystring,freq])
 
 if __name__ == "__main__":
-    single_file()
+    # single_file()
+    multiple_files()

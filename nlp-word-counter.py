@@ -18,7 +18,6 @@ tag = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 for filename in os.listdir(in_directory):
 	if filename.endswith('.txt'):
 		print(filename)
-
 		with open(in_directory+'/'+filename, 'r') as infile:
 			txt = infile.read()
 
@@ -28,6 +27,9 @@ for filename in os.listdir(in_directory):
 			nouns = []
 			remove_words_in_un_docs = ['fccc/cp/2015/10/add.1','fccc/cp/2015/7','fccc/sb/2015/inf.3','vii','a/res/70/1']
 			
+			"""
+				Noun
+			"""
 			for i in tokenized:
 				
 				# Word tokenizers is used to find the words
@@ -66,6 +68,11 @@ for filename in os.listdir(in_directory):
 			print(len(nouns)) # 5515 nouns
 			print(len(word_freq)) # 876 nouns
 
+		"""
+			2 grams
+		"""
+		
+		
 		with open(out_directory+tag+"_"+filename+".csv", 'w', newline='') as csvfile:
 			writer = csv.writer(csvfile)
 			writer.writerow(['Word', 'Frequency'])
