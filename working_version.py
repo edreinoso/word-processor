@@ -3,6 +3,7 @@ from scipy.stats import chi2_contingency
 from numpy import dot
 from numpy.linalg import norm
 import csv
+from matplotlib import pyplot
 
 
 def prepare_data_from_excel(file):
@@ -15,7 +16,10 @@ def prepare_data_from_excel(file):
     df_un = df.iloc[:,[0,2]].sort_values(['UN_par'],ascending=[True])
     df_un = df_un[~df_un['UN_par'].isna()]
     df_un = df_un.rename(columns={"UN_par": "keyword",})
-
+    # comp = df.iloc[:, [4,6]].sort_values(['BP_11'], ascending=[True])
+    # comp = comp[~comp['BP_11'].isna()]
+    # comp = comp.rename(columns={'BP_11': "keyword"})
+    # df_comp = comp.merge(df_un, on='keyword')
     for i in range(4, 240, 4):
         list_col.append(df.columns[i])
     print(list_col)
@@ -39,22 +43,20 @@ def prepare_data_from_excel(file):
             company = string[0]
             year = string[-1]
             writer.writerow({'Company': company, 'Year': "20"+year, 'Overlap-coefficient': overlap_coefficient, 'Cos-similarity': similarity})
-    # print(f"Overlap coefficient 0:-------------{(len(df_test.index)/len(df_un.index))*100}")
-    # print(f"Overlap coefficient 1:-------------{(len(df_test_1.index)/len(df_un.index))*100}")
-    # list_a = df_test.iloc[:, 1].values.tolist()
-    # list_b = df_test.iloc[:, 2].values.tolist()
-    # list_a1 = df_test_1.iloc[:, 1].values.tolist()
-    # list_b1 = df_test_1.iloc[:, 2].values.tolist()
+
+    # ----------------------- Plot start -----------------------
+    # list_a = df_comp.iloc[:, 1].values.tolist()
+    # list_b = df_comp.iloc[:, 2].values.tolist()
     # ax1 = pyplot.subplot()
     # l1, = ax1.plot(list_a, color='red')
     # l2, = ax1.plot(list_b, color='green')
     # # pyplot.scatter(df_test.iloc[:,1], df_test.iloc[:,2])
     # pyplot.legend([l1, l2], ["BP", "UN"])
     # pyplot.show()
+    # ----------------------- Plot end -----------------------
     # # chi_squared_cramer_v_influence_analysis(shell_2012, un)
     # print("Cosine test results below:-------------")
     # cosine_similarity(list_a, list_b)
-    # cosine_similarity(list_a1, list_b1)
 
 
 def cosine_similarity(list_a, list_b, x):
