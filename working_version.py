@@ -6,24 +6,24 @@ import csv
 from matplotlib import pyplot
 
 
-def prepare_data_from_excel(file):
+def prepare_data_from_excel(file, sheet, start, last_useful_col):
     # We only focus on first three columns - common-keyword, relative-frequency in UN, relative-frequency in Company_Year (others not relevant)
     # sorting of data in csv is important for our program, otherwise the merging will not work
     list_col = []
-    df = pd.read_excel(file,sheet_name='T_Paris_full_N')
+    df = pd.read_excel(file,sheet_name=sheet)
     u = df.select_dtypes(object)
     df[u.columns] = u.apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
-    df_un = df.iloc[:,[0,2]].sort_values(['UN_par'],ascending=[True])
-    df_un = df_un[~df_un['UN_par'].isna()]
-    df_un = df_un.rename(columns={"UN_par": "keyword",})
+    df_un = df.iloc[:,[0,2]].sort_values([start],ascending=[True])
+    df_un = df_un[~df_un[start].isna()]
+    df_un = df_un.rename(columns={start: "keyword",})
     # comp = df.iloc[:, [4,6]].sort_values(['BP_11'], ascending=[True])
     # comp = comp[~comp['BP_11'].isna()]
     # comp = comp.rename(columns={'BP_11': "keyword"})
     # df_comp = comp.merge(df_un, on='keyword')
-    for i in range(4, 240, 4):
+    for i in range(4, last_useful_col, 4):
         list_col.append(df.columns[i])
     print(list_col)
-    with open('T_Paris_full_N.csv', 'w', newline='') as csvfile:
+    with open(sheet+'_calc_results_for_relative_frequency.csv', 'w', newline='') as csvfile:
         fieldnames = ['Company', 'Year', 'Overlap-coefficient', 'Cos-similarity']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -33,7 +33,8 @@ def prepare_data_from_excel(file):
             temp = df.iloc[:,[(4*idx)+4,(4*idx)+6]].sort_values([x], ascending=[True])
             temp = temp[~temp[x].isna()]
             temp = temp.rename(columns={x: "keyword"})
-            df_test = temp.merge(df_un, on='keyword')
+            df_test = temp.merge(df_un, on='keyword') # bible of the merge state - common keywords
+            # df_test.to_csv('merged-relative_freq/UN-'+x+'.csv')
             overlap_coefficient = (len(df_test.index) / len(df_un.index)) * 100
             print(f"Overlap coefficient {idx}:-------------{overlap_coefficient}")
             list_a = df_test.iloc[:, 1].values.tolist()
@@ -66,5 +67,22 @@ def cosine_similarity(list_a, list_b, x):
 
 
 if __name__ == '__main__':
-    file = 'Thesis_POL (revised).xlsx'
-    prepare_data_from_excel(file)
+    # file = 'Thesis_POL.xlsx'
+    # sheet = 'T_Paris_full_N'
+    # start = 'UN_par'
+    # last_useful_col = 240
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # sheet = 'Glasgow_N'
+    # start = 'UN_gla'
+    # last_useful_col = 116
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # sheet = 'Katowice_N'
+    # start = 'UN_kat'
+    # last_useful_col = 200
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # ----------2-Grams
+    file = 'Thesis_POL.xlsx'
+    sheet = 'Paris_full_2'
+    start = 'UN_par'
+    last_useful_col = 76
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
