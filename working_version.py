@@ -13,24 +13,24 @@ def prepare_data_from_excel(file, sheet, start, last_useful_col):
     df = pd.read_excel(file,sheet_name=sheet)
     u = df.select_dtypes(object)
     df[u.columns] = u.apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
-    df_un = df.iloc[:,[0,2]].sort_values([start],ascending=[True])
+    df_un = df.iloc[:,[0,1]].sort_values([start],ascending=[True])
     df_un = df_un[~df_un[start].isna()]
     df_un = df_un.rename(columns={start: "keyword",})
     # comp = df.iloc[:, [4,6]].sort_values(['BP_11'], ascending=[True])
     # comp = comp[~comp['BP_11'].isna()]
     # comp = comp.rename(columns={'BP_11': "keyword"})
     # df_comp = comp.merge(df_un, on='keyword')
-    for i in range(4, last_useful_col, 4):
+    for i in range(4, last_useful_col+1, 4):  # last_useful_col+1, so that last column is included in the iteration
         list_col.append(df.columns[i])
     print(list_col)
-    with open(sheet+'_calc_results_for_relative_frequency.csv', 'w', newline='') as csvfile:
+    with open(sheet+'_calc_results_for_total_frequency.csv', 'w', newline='') as csvfile:
         fieldnames = ['Company', 'Year', 'Overlap-coefficient', 'Cos-similarity']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for idx, x in enumerate(list_col):
             print(f"-------------------------------------Iteration: {idx}-------------------------------")
-            temp = df.iloc[:,[(4*idx)+4,(4*idx)+6]].sort_values([x], ascending=[True])
+            temp = df.iloc[:,[(4*idx)+4,(4*idx)+5]].sort_values([x], ascending=[True])
             temp = temp[~temp[x].isna()]
             temp = temp.rename(columns={x: "keyword"})
             df_test = temp.merge(df_un, on='keyword') # bible of the merge state - common keywords
@@ -81,8 +81,16 @@ if __name__ == '__main__':
     # last_useful_col = 200
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
     # ----------2-Grams
-    file = 'Thesis_POL.xlsx'
+    file = '2_grams.xlsx'
     sheet = 'Paris_full_2'
     start = 'UN_par'
-    last_useful_col = 76
+    last_useful_col = 240
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'Glasgow_2'
+    start = 'UN_gla'
+    last_useful_col = 112
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'Katowice_2'
+    start = 'UN_kat'
+    last_useful_col = 168
     prepare_data_from_excel(file, sheet, start, last_useful_col)

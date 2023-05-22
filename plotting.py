@@ -24,11 +24,11 @@ def prepare_data_from_excel_to_plot(file):
 
 
 if __name__ == '__main__':
-    file = 'T_Paris_full_N_calc_results.csv'
+    file = 'Paris_full_2_calc_results_for_relative_frequency.csv'
     prepare_data_from_excel_to_plot(file)
-    file = 'Glasgow_N_calc_results.csv'
+    file = 'Glasgow_2_calc_results_for_relative_frequency.csv'
     prepare_data_from_excel_to_plot(file)
-    file = 'Katowice_N_calc_results.csv'
+    file = 'Katowice_2_calc_results_for_relative_frequency.csv'
     prepare_data_from_excel_to_plot(file)
     #------------Plot 2-grams-----------
     # file = 'Paris_full_2_calc_results_for_relative_frequency.csv'
