@@ -1,9 +1,7 @@
 import pandas as pd
-from scipy.stats import chi2_contingency
 from numpy import dot
 from numpy.linalg import norm
 import csv
-from matplotlib import pyplot
 
 
 def prepare_data_from_excel(file, sheet, start, last_useful_col):
