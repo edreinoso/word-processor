@@ -28,7 +28,7 @@ def prepare_data_from_excel(file, sheet, start, last_useful_col):
         writer.writeheader()
 
         for idx, x in enumerate(list_col):
-            print(f"-------------------------------------Iteration: {idx}-------------------------------")
+            print(f"----------------Sheet: {sheet}, ---------------Iteration: {idx}-----------------")
             temp = df.iloc[:,[(4*idx)+4,(4*idx)+5, (4*idx)+6]].sort_values([x], ascending=[True])
             temp = temp[~temp[x].isna()]
             temp = temp.rename(columns={x: "keyword"})
@@ -84,7 +84,7 @@ def common_data_from_excel(file, sheet, start, last_useful_col, new_name):
     df_again = pd.DataFrame()
     # 2nd round - Iterate through all values, and find the intersection and concat the dataframe
     for idx, x in enumerate(list_col):
-        print(f"-------------------------------------Iteration: {idx}-------------------------------")
+        print(f"----------------Sheet: {sheet}, ---------------Iteration: {idx}-----------------")
         temp = df.iloc[:,[(4*idx)+0,(4*idx)+1, (4*idx)+2]].sort_values([x], ascending=[True])
         temp = temp[~temp[x].isna()]
         # temp = temp.rename(columns={x: "keyword"})
@@ -97,37 +97,37 @@ def common_data_from_excel(file, sheet, start, last_useful_col, new_name):
 
 if __name__ == '__main__':
     # create Excel file only once for saving the merged data frames
-    new_name = 'new-data/Overall_common_words.xlsx'
-    wb = Workbook()
-    wb.save(new_name)
+    # new_name = 'new-data/Overall_common_words.xlsx'
+    # wb = Workbook()
+    # wb.save(new_name)
     file = 'Thesis_POL_U3.xlsx'
     # sheet = 'T_Paris_full_N'
     # start = 'UN_par'
     # last_useful_col = 240
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    # sheet = 'Glasgow_N'
-    # start = 'UN_gla'
-    # last_useful_col = 160
-    # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    # sheet = 'Katowice_N'
-    # start = 'UN_kat'
-    # last_useful_col = 200
-    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'Glasgow_N'
+    start = 'UN_gla'
+    last_useful_col = 152
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'Katowice_N'
+    start = 'UN_kat'
+    last_useful_col = 200
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
     # ----------2-Grams
-    # file = 'Thesis_POL.xlsx'
+    # file = 'Thesis_POL_U3.xlsx'
     # sheet = 'Paris_full_2'
     # start = 'UN_par'
     # last_useful_col = 240
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    # sheet = 'Glasgow_2'
-    # start = 'UN_gla'
-    # last_useful_col = 156
-    # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    # sheet = 'Katowice_2'
-    # start = 'UN_kat'
-    # last_useful_col = 200
-    # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    # UN common word calculator
+    sheet = 'Glasgow_2'
+    start = 'UN_gla'
+    last_useful_col = 152
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'Katowice_2'
+    start = 'UN_kat'
+    last_useful_col = 200
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    ######### UN common word calculator #########
     # sheet = 'All_UN_N'
     # start = 'UN_par'
     # last_useful_col = 4
@@ -136,19 +136,20 @@ if __name__ == '__main__':
     # start = 'UN_par'
     # last_useful_col = 4
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    sheet = 'All_N'
-    start = 'UN_par'
-    last_useful_col = 560
-    common_data_from_excel(file, sheet, start, last_useful_col,new_name)
-    sheet = 'All_UN_N'
-    start = 'UN_par'
-    last_useful_col = 8
-    common_data_from_excel(file, sheet, start, last_useful_col, new_name)
-    sheet = 'All_2'
-    start = 'UN_par'
-    last_useful_col = 552
-    common_data_from_excel(file, sheet, start, last_useful_col, new_name)
-    sheet = 'All_UN_2'
-    start = 'UN_par'
-    last_useful_col = 8
-    common_data_from_excel(file, sheet, start, last_useful_col, new_name)
+    ################### common-words analysis ###################
+    # sheet = 'All_N'
+    # start = 'UN_par'
+    # last_useful_col = 560
+    # common_data_from_excel(file, sheet, start, last_useful_col,new_name)
+    # sheet = 'All_UN_N'
+    # start = 'UN_par'
+    # last_useful_col = 8
+    # common_data_from_excel(file, sheet, start, last_useful_col, new_name)
+    # sheet = 'All_2'
+    # start = 'UN_par'
+    # last_useful_col = 552
+    # common_data_from_excel(file, sheet, start, last_useful_col, new_name)
+    # sheet = 'All_UN_2'
+    # start = 'UN_par'
+    # last_useful_col = 8
+    # common_data_from_excel(file, sheet, start, last_useful_col, new_name)
