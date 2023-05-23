@@ -99,7 +99,16 @@ if __name__ == '__main__':
     # start = 'UN_gla'
     # last_useful_col = 156
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    sheet = 'Katowice_2'
-    start = 'UN_kat'
-    last_useful_col = 200
+    # sheet = 'Katowice_2'
+    # start = 'UN_kat'
+    # last_useful_col = 200
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # UN common word calculator
+    sheet = 'All_UN_N'
+    start = 'UN_par'
+    last_useful_col = 4
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'All_UN_2'
+    start = 'UN_par'
+    last_useful_col = 4
     prepare_data_from_excel(file, sheet, start, last_useful_col)
