@@ -2,9 +2,12 @@ import pandas as pd
 from matplotlib import pyplot
 import glob
 
-
+'''
+This function is used to plot the overlap-score and cos-similarity value for different companies varying with year
+based on the input file supplied to it, bearing the company name, year, cosine-similarity scores for total-frequency
+and relative frequency comparison with respect to the UN document for a given agreement.
+'''
 def prepare_data_from_csv_to_plot(file):
-    # This function is used to plot the overlap-score and cos-similarity value for different companies varying with year
     df = pd.read_csv(file, sep=',')
     # print(df)
     ##### TOTAL_FREQUENCY #####
@@ -39,15 +42,6 @@ def prepare_data_from_csv_to_plot(file):
 
 
 if __name__ == '__main__':
-    # file = 'Paris_full_2_calc_results_for_relative_frequency.csv'
-    # prepare_data_from_excel_to_plot(file)
-    # file = 'Glasgow_2_calc_results_for_relative_frequency.csv'
-    # prepare_data_from_excel_to_plot(file)
-    # file = 'Katowice_2_calc_results_for_relative_frequency.csv'
-    # prepare_data_from_excel_to_plot(file)
-    # #------------Plot 2-grams-----------
-    # # file = 'Paris_full_2_calc_results_for_relative_frequency.csv'
-    # # prepare_data_from_excel_to_plot(file)
     path = "new-data/*.csv"
     for name in glob.glob(path):
         print(name)

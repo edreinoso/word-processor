@@ -4,7 +4,10 @@ from numpy.linalg import norm
 import csv
 from openpyxl import Workbook
 
-
+'''
+This function is a critical-function which extracts the common-words between the respective 1-grams and 2-grams extracted 
+from the documents of companies and the UN for each of the agreements.
+'''
 def prepare_data_from_excel(file, sheet, start, last_useful_col):
     # We only focus on first three columns - common-keyword, relative-frequency in UN, relative-frequency in Company_Year (others not relevant)
     # sorting of data in csv is important for our program, otherwise the merging will not work
@@ -32,34 +35,40 @@ def prepare_data_from_excel(file, sheet, start, last_useful_col):
             temp = df.iloc[:,[(4*idx)+4,(4*idx)+5, (4*idx)+6]].sort_values([x], ascending=[True])
             temp = temp[~temp[x].isna()]
             temp = temp.rename(columns={x: "keyword"})
-            df_test = temp.merge(df_un, on='keyword') # bible of the merge state - common keywords
+            df_test = temp.merge(df_un, on='keyword') # bible of the merge functionality - extract common keywords for UN and a company
             df_test = df_test.rename(columns={"keyword":"keyword_"+x})
             with pd.ExcelWriter('new-data/data_merged_file.xlsx', mode='a', if_sheet_exists='overlay') as excel_writer:
                 df_test.to_excel(excel_writer, sheet_name=sheet, startcol=5*idx, index=False)
             overlap_coefficient = (len(df_test.index) / len(df_un.index)) * 100
             print(f"Overlap coefficient {idx}:-------------{overlap_coefficient}")
-            list_a_total = df_test.iloc[:, 1].values.tolist()
-            list_a_relative = df_test.iloc[:, 2].values.tolist()
-            list_b_total = df_test.iloc[:, 3].values.tolist()
-            list_b_relative = df_test.iloc[:, 4].values.tolist()
+            list_a_total = df_test.iloc[:, 1].values.tolist()  # Company's total-frequency values in list of common-words
+            list_a_relative = df_test.iloc[:, 2].values.tolist()  # Company's relative-frequency values in list of common-words
+            list_b_total = df_test.iloc[:, 3].values.tolist()  # UN's total-frequency values in list of common-words
+            list_b_relative = df_test.iloc[:, 4].values.tolist()  # UN's relative-frequency values in list of common-words
             similarity_total = cosine_similarity(list_a_total, list_b_total, x)
             similarity_relative = cosine_similarity(list_a_relative, list_b_relative, x)
             string = x.rsplit('_')
             company = string[0]
             year = string[-1]
+            # write to a CSV above company, year and cosine-similarity calculation for each of the company-UN pair of common-keywords
             writer.writerow({'Company': company, 'Year': '20'+year, 'Overlap-coefficient': overlap_coefficient,
                              'Cosine-similarity_Total_Frequency': similarity_total, 'Cosine-similarity_Relative_Frequency': similarity_relative})
 
-
+'''
+This function calculates the cosine similarity between the two lists supplied to it based on the common keywords, 
+corresponding to a company 'x' and the UN respectively
+'''
 def cosine_similarity(list_a, list_b, x):
     cos_sim = dot(list_a, list_b) / (norm(list_a) * norm(list_b))
     print(f"Cos-similarity with respect to the company {x}= {cos_sim}")
     return cos_sim
 
 
+'''
+This function is another critical-function which extracts the common-words amongst the respective 1-grams and 2-grams 
+extracted from the entire documents of companies and the UN for each of the sheets supplied as an input parameter.
+'''
 def common_data_from_excel(file, sheet, start, last_useful_col, new_name):
-    # We only focus on first three columns - common-keyword, relative-frequency in UN, relative-frequency in Company_Year (others not relevant)
-    # sorting of data in csv is important for our program, otherwise the merging will not work
     list_col = []
     df = pd.read_excel(file,sheet_name=sheet)
     u = df.select_dtypes(object)
@@ -87,10 +96,8 @@ def common_data_from_excel(file, sheet, start, last_useful_col, new_name):
         print(f"----------------Sheet: {sheet}, ---------------Iteration: {idx}-----------------")
         temp = df.iloc[:,[(4*idx)+0,(4*idx)+1, (4*idx)+2]].sort_values([x], ascending=[True])
         temp = temp[~temp[x].isna()]
-        # temp = temp.rename(columns={x: "keyword"})
-    #     temp = temp.merge(df_last, on='keyword') # bible of the merge state - common keywords
-    #     # df_test = df_test.rename(columns={"keyword":"keyword_"+x})
         df_again = pd.concat([temp[temp[x].isin(common_last)]])   #.sort_values(by=x)
+        # write to a CSV the common keywords (and associated frequencies) which were found throughout the sheet amongst all company and UN-pairs
         with pd.ExcelWriter(new_name, mode='a', if_sheet_exists='overlay') as excel_writer:
             df_again.to_excel(excel_writer, sheet_name=sheet, startcol=3 * idx, index=False)
 
