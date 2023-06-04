@@ -104,35 +104,39 @@ def common_data_from_excel(file, sheet, start, last_useful_col, new_name):
 
 if __name__ == '__main__':
     # create Excel file only once for saving the merged data frames
-    # new_name = 'new-data/Overall_common_words.xlsx'
+    new_name = 'new-data/Overall_common_words.xlsx'
     # wb = Workbook()
     # wb.save(new_name)
-    file = 'Thesis_POL_U3.xlsx'
+    file = 'Paris_2016.xlsx'
     # sheet = 'T_Paris_full_N'
     # start = 'UN_par'
     # last_useful_col = 240
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    sheet = 'Glasgow_N'
-    start = 'UN_gla'
-    last_useful_col = 152
-    prepare_data_from_excel(file, sheet, start, last_useful_col)
-    sheet = 'Katowice_N'
-    start = 'UN_kat'
-    last_useful_col = 200
-    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # sheet = 'Glasgow_N'
+    # start = 'UN_gla'
+    # last_useful_col = 152
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # sheet = 'Katowice_N'
+    # start = 'UN_kat'
+    # last_useful_col = 200
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
     # ----------2-Grams
     # file = 'Thesis_POL_U3.xlsx'
     # sheet = 'Paris_full_2'
     # start = 'UN_par'
     # last_useful_col = 240
     # prepare_data_from_excel(file, sheet, start, last_useful_col)
-    sheet = 'Glasgow_2'
-    start = 'UN_gla'
-    last_useful_col = 152
-    prepare_data_from_excel(file, sheet, start, last_useful_col)
-    sheet = 'Katowice_2'
-    start = 'UN_kat'
-    last_useful_col = 200
+    # sheet = 'Glasgow_2'
+    # start = 'UN_gla'
+    # last_useful_col = 152
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    # sheet = 'Katowice_2'
+    # start = 'UN_kat'
+    # last_useful_col = 200
+    # prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = 'Nouns'
+    start = 'UN_par'
+    last_useful_col = 48
     prepare_data_from_excel(file, sheet, start, last_useful_col)
     ######### UN common word calculator #########
     # sheet = 'All_UN_N'
@@ -160,3 +164,12 @@ if __name__ == '__main__':
     # start = 'UN_par'
     # last_useful_col = 8
     # common_data_from_excel(file, sheet, start, last_useful_col, new_name)
+    ######## New Paris 2016 sheet ########
+    sheet = 'Nouns'
+    start = 'UN_par'
+    last_useful_col = 48
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
+    sheet = '2-grams'
+    start = 'UN_par'
+    last_useful_col = 48
+    prepare_data_from_excel(file, sheet, start, last_useful_col)
